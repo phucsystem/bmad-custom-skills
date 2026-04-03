@@ -9,14 +9,14 @@ This repo stores custom BMAD (Build Measure Analyze Deploy) skills — declarati
 ## Repository Structure
 
 ```
-.claude/skills/
-├── {skill-name}/
-│   └── SKILL.md          # Skill definition with frontmatter & instructions
+skills/                          # Skill definitions (source of truth)
 ├── bmad-dev-test-loop/
-│   └── SKILL.md          # Automated Dev→Test→Feedback loop (Amelia & Quinn)
-├── bmad-ui-verify/
-│   └── SKILL.md          # Visual QA — compare UI against mockup
-└── ...
+│   └── SKILL.md                 # Automated Dev→Test→Feedback loop
+└── bmad-ui-verify/
+    └── SKILL.md                 # Visual QA — compare UI against mockup
+scripts/
+└── dev-link.mjs                 # Copy skills to .claude/skills/ for dev/testing
+docs/                            # Project documentation
 ```
 
 ## Available Skills
@@ -49,15 +49,19 @@ Visual QA skill that compares a running UI against a design mockup using AI visi
 
 ## Usage
 
-### Copy a Skill to Your Project
+### Copy Skills to a Target Project
 
 ```bash
-# Copy entire skill directory into your project
-cp -r .claude/skills/bmad-dev-test-loop /path/to/your/project/.claude/skills/
+# Copy all skills to another project
+node scripts/dev-link.mjs /path/to/your/project
 
-# Or symlink (preferred for shared repos)
-ln -s /path/to/bmad-custom-skills/.claude/skills/bmad-dev-test-loop \
-      /path/to/your/project/.claude/skills/bmad-dev-test-loop
+# Copy to this repo's .claude/skills/ for local testing
+node scripts/dev-link.mjs
+```
+
+Or manually:
+```bash
+cp -r skills/bmad-dev-test-loop /path/to/your/project/.claude/skills/
 ```
 
 ### Invoke a Skill in Claude Code
@@ -68,8 +72,7 @@ ln -s /path/to/bmad-custom-skills/.claude/skills/bmad-dev-test-loop \
 
 Skill activation requires:
 - Claude Code CLI
-- Project with `.claude/skills/` directory
-- SKILL.md in the skill directory with valid frontmatter
+- Skill copied to target project's `.claude/skills/` directory
 
 ## Contributing
 
@@ -77,7 +80,7 @@ Skill activation requires:
 
 1. Create skill directory:
    ```bash
-   mkdir -p .claude/skills/{skill-name}
+   mkdir -p skills/{skill-name}
    ```
 
 2. Create `SKILL.md` with required frontmatter:

@@ -9,13 +9,13 @@ A lightweight configuration repository containing reusable Claude Code skill def
 ```
 bmad-custom-skills/
 ├── README.md                          # Usage guide and skill overview
-├── .git/                              # Version control
-├── .claude/
-│   └── skills/
-│       ├── bmad-dev-test-loop/
-│       │   └── SKILL.md               # Automated dev-test feedback loop
-│       └── bmad-ui-verify/
-│           └── SKILL.md               # Visual QA — mockup vs implementation
+├── skills/                            # Skill definitions (source of truth)
+│   ├── bmad-dev-test-loop/
+│   │   └── SKILL.md                   # Automated dev-test feedback loop
+│   └── bmad-ui-verify/
+│       └── SKILL.md                   # Visual QA — mockup vs implementation
+├── scripts/
+│   └── dev-link.mjs                   # Copy skills to .claude/skills/ for dev/testing
 ├── docs/
 │   ├── project-overview-pdr.md        # Vision, scope, requirements
 │   ├── code-standards.md              # Standards for writing skills
@@ -75,9 +75,10 @@ bmad-custom-skills/
 
 | Directory | Purpose | Ownership |
 |-----------|---------|-----------|
-| `.claude/skills/` | Skill definitions | Community |
-| `.claude/skills/bmad-dev-test-loop/` | Dev-test loop skill | MedAdvisor |
-| `.claude/skills/bmad-ui-verify/` | Visual QA skill | MedAdvisor |
+| `skills/` | Skill definitions (source of truth) | Community |
+| `skills/bmad-dev-test-loop/` | Dev-test loop skill | MedAdvisor |
+| `skills/bmad-ui-verify/` | Visual QA skill | MedAdvisor |
+| `scripts/` | Dev tooling | MedAdvisor |
 | `docs/` | Documentation | Technical Writer |
 | `plans/` | Work plans and reports | Project Lead |
 
