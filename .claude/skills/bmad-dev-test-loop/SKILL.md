@@ -16,6 +16,9 @@ Loops until pass or max iterations reached.
 
 - `$ARGUMENTS` — story file path OR freeform intent description
 - `--max N` — max iterations (default: 3)
+- `--mockup <path-or-url>` — mockup reference for UI verification (Figma URL, image, PDF)
+- `--dev-url <url>` — running dev server URL for UI capture (default: auto-detect)
+- `--viewport <mode>` — viewport for UI verification: `desktop` (default), `mobile`, `both`
 
 ## Initialization
 
@@ -36,11 +39,18 @@ Loops until pass or max iterations reached.
    - Check for `{project_root}/_bmad/bmm/config.yaml` — load project_name, communication_language if present
    - If no BMAD config, continue with defaults
 
-4. **Initialize state:**
+4. **Detect UI mode:**
+   - If `--mockup` provided → set `ui_mode = true`, store `mockup_source`
+   - If `--dev-url` provided → store as `dev_url`
+   - Else detect dev server: check `package.json` for `dev` or `start` script → build `dev_url`
+   - If `ui_mode = true` and no `dev_url` determinable → ask user for URL
+
+5. **Initialize state:**
    - `iteration = 0`
    - `max_iterations = N`
    - `feedback = null`
    - `status = "running"`
+   - `ui_mode = true/false`
 
 ## Loop Execution
 
@@ -141,6 +151,11 @@ You are Quinn — BMAD QA Engineer.
 3. Review changed files for: broken imports, missing error handling, security issues, naming violations
 4. Verify test coverage — are all new functions/endpoints/components tested?
 5. Check tests are realistic (no mocks/fakes that hide real issues)
+6. If UI mode enabled:
+   - Invoke /bmad-ui-verify {mockup_source} --url {dev_url} --viewport {viewport}
+   - Parse STATUS from ui-verify output (UI_PASS, UI_FAIL, BLOCKED)
+   - A UI_FAIL = overall FAIL regardless of test results
+   - A BLOCKED = report to user, do not count as FAIL
 
 ## Required Output Format
 VERDICT: PASS or FAIL
@@ -151,11 +166,16 @@ VERDICT: PASS or FAIL
 - Coverage: [adequate/gaps — list uncovered areas]
 - Review: [pass/fail — list issues if any]
 
+### UI Verification (if UI mode)
+- UI Status: [UI_PASS/UI_FAIL/BLOCKED]
+- Visual match: N%
+- UI Issues: [list from bmad-ui-verify output]
+
 ### Issues (if FAIL)
 For each issue:
 - **File:** path/to/file.ts:lineNumber
 - **Severity:** critical | major | minor
-- **Category:** test-failure | type-error | missing-test | code-issue | security
+- **Category:** test-failure | type-error | missing-test | code-issue | security | ui-layout | ui-color | ui-typography | ui-spacing | ui-missing | ui-extra
 - **Issue:** description
 - **Fix suggestion:** what Amelia should change
 
@@ -185,6 +205,9 @@ Work context: {project_root}
 
 ### Missing Test Coverage
 {list of untested functions/components}
+
+### UI Issues Found (if UI mode)
+{issues from bmad-ui-verify with severity, category, element, expected vs actual, fix suggestion}
 
 ### Fix Priority
 1. Critical issues first
@@ -232,3 +255,5 @@ Recommendation: review remaining issues manually or run `/bmad-dev-test-loop` ag
 - **No mocks or fakes** — tests must validate real behavior, no shortcuts to pass
 - **Test-driven** — Amelia must write tests for every new function/component, Quinn must verify coverage
 - **BMAD standards** — both agents must follow project-context.md and CLAUDE.md conventions
+- **UI FAIL = overall FAIL** — if `--mockup` provided and UI verification fails, Quinn must report FAIL even if all tests pass
+- **UI feedback is structured** — UI issues use the same severity/category/file/fix format as code issues
