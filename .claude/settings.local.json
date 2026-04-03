@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(wc -l /Users/phuc/Code/01-projects/MedAdvisor/bmad-custom-skills/README.md /Users/phuc/Code/01-projects/MedAdvisor/bmad-custom-skills/docs/*.md)",
+      "Bash(grep -l \"bmad-dev-test-loop\" README.md docs/*.md)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)"
+    ]
+  }
+}
