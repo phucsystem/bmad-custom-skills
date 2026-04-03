@@ -1,0 +1,24 @@
+# Ignore most documentation and plans (managed locally)
+docs/*
+!docs/codebase-summary.md
+!docs/code-standards.md
+!docs/*.md
+
+plans/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Worktrees
+.worktrees/
+
+# Session state (local-only)
+.claude/session-state/
+.claude/settings.local.json
