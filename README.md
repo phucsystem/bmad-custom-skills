@@ -14,6 +14,8 @@ This repo stores custom BMAD (Build Measure Analyze Deploy) skills — declarati
 │   └── SKILL.md          # Skill definition with frontmatter & instructions
 ├── bmad-dev-test-loop/
 │   └── SKILL.md          # Automated Dev→Test→Feedback loop (Amelia & Quinn)
+├── bmad-ui-verify/
+│   └── SKILL.md          # Visual QA — compare UI against mockup
 └── ...
 ```
 
@@ -25,7 +27,25 @@ Orchestrates iterative feature development using two BMAD agents in a structured
 - **Quinn** (QA Engineer) validates with test coverage and structured feedback
 
 **Trigger:** `dev test loop`, `build and test`, or `dtl`  
-**Features:** Automated testing, type checking, feedback loops, configurable max iterations
+**Features:** Automated testing, type checking, feedback loops, configurable max iterations  
+**UI Mode:** Add `--mockup <figma-url|image|pdf>` to enable visual QA via `bmad-ui-verify`
+
+### bmad-ui-verify
+Visual QA skill that compares a running UI against a design mockup using AI vision analysis and DOM style inspection. Produces structured, actionable feedback.
+
+**Trigger:** `verify UI`, `check design`, `ui verify`, `compare mockup`  
+**Features:** Figma/image/PDF mockup support, Chrome or headless browser capture, two-layer comparison (AI vision + DOM inspection), desktop/mobile viewports
+
+```bash
+# Compare against a Figma design
+/bmad-ui-verify figma.com/design/abc123/MyPage --url http://localhost:3000
+
+# Compare against an image mockup
+/bmad-ui-verify ./designs/dashboard.png --cmd "npm run dev" --path /dashboard
+
+# Check both viewports
+/bmad-ui-verify ./mockup.pdf --url http://localhost:3000 --viewport both
+```
 
 ## Usage
 

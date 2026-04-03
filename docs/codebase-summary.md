@@ -12,8 +12,10 @@ bmad-custom-skills/
 ├── .git/                              # Version control
 ├── .claude/
 │   └── skills/
-│       └── bmad-dev-test-loop/
-│           └── SKILL.md               # Automated dev-test feedback loop
+│       ├── bmad-dev-test-loop/
+│       │   └── SKILL.md               # Automated dev-test feedback loop
+│       └── bmad-ui-verify/
+│           └── SKILL.md               # Visual QA — mockup vs implementation
 ├── docs/
 │   ├── project-overview-pdr.md        # Vision, scope, requirements
 │   ├── code-standards.md              # Standards for writing skills
@@ -40,7 +42,7 @@ bmad-custom-skills/
    - **Step B:** Quinn validates via test run, typecheck, coverage review
    - **Step C:** Evaluate verdict — pass/fail/blocked, provide feedback if needed
 
-**Activation:** `/bmad-dev-test-loop <story-file-or-intent> [--max N]`
+**Activation:** `/bmad-dev-test-loop <story-file-or-intent> [--max N] [--mockup <source>]`
 
 **Key Features:**
 - Story file mode (reads .md spec) or intent mode (freeform description)
@@ -48,6 +50,26 @@ bmad-custom-skills/
 - Structured feedback format prevents rework of passing code
 - Configurable iteration limit (default: 3)
 - BMAD agent principles embedded in prompts
+- UI mode via `--mockup` flag — invokes `bmad-ui-verify` during Quinn's validation
+
+### bmad-ui-verify
+**Path:** `.claude/skills/bmad-ui-verify/SKILL.md` (227 lines)
+
+**Purpose:** Visual QA — compares running UI against design mockup using AI vision + DOM inspection.
+
+**Execution Flow:**
+1. Extract design spec from mockup (Figma URL, image, or PDF → reference image + design brief)
+2. Capture implementation (screenshot via Chrome MCP or headless browser + DOM computed styles)
+3. Compare & report (AI vision comparison + DOM cross-validation → structured verdict)
+
+**Activation:** `/bmad-ui-verify <mockup> --url <live-url> | --cmd <dev-server-cmd>`
+
+**Key Features:**
+- Supports Figma URLs, PNG/JPG images, and PDF mockups
+- Two-layer comparison: AI vision (broad) + DOM inspection (precise)
+- Desktop (1440×900) and mobile (390×844) viewport support
+- Confidence levels: high (both layers agree) vs medium (vision only)
+- Output format compatible with DTL feedback structure
 
 ## Directory Summary
 
@@ -55,6 +77,7 @@ bmad-custom-skills/
 |-----------|---------|-----------|
 | `.claude/skills/` | Skill definitions | Community |
 | `.claude/skills/bmad-dev-test-loop/` | Dev-test loop skill | MedAdvisor |
+| `.claude/skills/bmad-ui-verify/` | Visual QA skill | MedAdvisor |
 | `docs/` | Documentation | Technical Writer |
 | `plans/` | Work plans and reports | Project Lead |
 
@@ -66,9 +89,10 @@ bmad-custom-skills/
 | project-overview-pdr.md | 95 | Vision, scope, success metrics, risks |
 | code-standards.md | 280 | Standards for writing and maintaining skills |
 | codebase-summary.md | This file | Repository structure and content overview |
-| bmad-dev-test-loop/SKILL.md | 235 | Dev-test loop orchestration logic |
+| bmad-dev-test-loop/SKILL.md | 260 | Dev-test loop orchestration logic (with UI mode) |
+| bmad-ui-verify/SKILL.md | 227 | Visual QA — mockup vs implementation |
 
-**Total:** ~680 lines of configuration and documentation, 0 lines of runtime code.
+**Total:** ~900 lines of configuration and documentation, 0 lines of runtime code.
 
 ## Key Concepts
 
@@ -114,7 +138,7 @@ Each skill:
 ## Development Status
 
 - **Created:** 2026-04-03
-- **Status:** Initial release (1 production skill)
+- **Status:** Active (2 production skills)
 - **Next:** Validation with 2+ projects by Q2 2026, expand library
 
 ## How to Extend
