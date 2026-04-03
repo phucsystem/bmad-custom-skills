@@ -1,0 +1,14 @@
+{
+  "name": "bmad-custom-skills",
+  "private": true,
+  "type": "module",
+  "description": "Reusable Claude Code skill definitions for MedAdvisor projects",
+  "scripts": {
+    "dev-link": "node scripts/dev-link.mjs",
+    "capture": "node scripts/capture-screenshot.mjs",
+    "postinstall": "npx playwright install chromium"
+  },
+  "dependencies": {
+    "playwright": "^1.52.0"
+  }
+}

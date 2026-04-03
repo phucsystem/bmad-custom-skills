@@ -31,7 +31,8 @@ Visual QA skill that compares a running UI against a design mockup using AI visi
 3. **Detect browser tool** — try in order:
    - `mcp__claude-in-chrome__navigate` available → use Chrome MCP
    - `/ck:browse` or `/ck:gstack` available → use headless browser
-   - Neither → fallback to manual screenshot (ask user)
+   - `scripts/capture-screenshot.mjs` exists in skill repo → use Playwright capture
+   - None available → fallback to manual screenshot (ask user)
 
 4. **Initialize state:**
    - `reference_image = null`
@@ -98,6 +99,20 @@ Goal: Screenshot the running UI and extract computed DOM styles.
 1. Navigate to `{url}{path}`
 2. Screenshot with appropriate viewport
 3. Store as `{implementation_screenshot}`
+
+**Using Playwright capture script:**
+1. Locate script: find `capture-screenshot.mjs` in the skill repo's `scripts/` directory
+2. For `desktop` viewport:
+   ```bash
+   node {script_path} --url "{url}{path}" --viewport 1440x900 --output /tmp/ui-verify-desktop.png --js "{dom_extraction_js}"
+   ```
+3. For `mobile` viewport:
+   ```bash
+   node {script_path} --url "{url}{path}" --viewport 390x844 --output /tmp/ui-verify-mobile.png --js "{dom_extraction_js}"
+   ```
+4. Parse JSON output → `{implementation_screenshot}` from `screenshot` field
+5. If `js_result` present → `{computed_styles}` from that field (skip separate DOM extraction)
+6. If script fails with "playwright not installed" → report BLOCKED with install instructions
 
 **Manual fallback:**
 1. Ask user: "Please screenshot {url}{path} and provide the file path"
